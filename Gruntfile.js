@@ -7,11 +7,11 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     paths: ["<%= project.path %>"],
-                    sourceMap: true
-                    //compress: true,
+                    sourceMap: true,
+                    sourceMapURL: "<%= project.sourceMapURL %>"
                 },
                 files: {
-                    "<%= project.cssFile %>": "<%= project.lessFile %>"
+                    "<%= project.cssFile %>": "<%= project.lessFolder %>/<%= project.lessFile %>"
                 }
             },
             prod: {
@@ -21,7 +21,7 @@ module.exports = function (grunt) {
                     compress: true
                 },
                 files: {
-                    "<%= project.compressedFile %>": "<%= project.lessFile %>"
+                    "<%= project.compressedFile %>": "<%= project.lessFolder %>/<%= project.lessFile %>"
                 }
             }
         },
@@ -31,7 +31,13 @@ module.exports = function (grunt) {
                     {expand: true, flatten: true, src: ["<%= project.fontsFile %>"], dest: "<%= project.fontsCopy %>", filter: 'isFile'}
                ]
             }
-        }
+        },
+        watch: {
+            scripts: {
+                files: ['<%= project.lessFolder %>/*.less'],
+                tasks: ['less:dev'],
+            },
+        },
     };
     
     grunt.initConfig(config); 
@@ -40,7 +46,7 @@ module.exports = function (grunt) {
 // Plugin loading
     // grunt.loadNpmTasks('grunt-typescript');
     // grunt.loadNpmTasks('grunt-concat-sourcemap');
-    // grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
     // grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
