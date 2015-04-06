@@ -38,6 +38,32 @@ module.exports = function (grunt) {
                 tasks: ['less:dev'],
             },
         },
+        rsync: {
+            options: {
+                args: ['-avz', '--verbose'],
+                exclude: ['.git*', 'cache', 'log'],
+                recursive: true
+            },
+            development: {
+                options: {
+                      src: "<%= project.cssFile %>",
+                      dest: "<%= project.remoteGrunt %>/<%= project.cssGrunt %>",
+                      host: 'almeyda@almeyda.biz',
+                 //   port: 2222
+                }
+            }
+        },
+        //    sshexec: {
+    //        development: {
+    //            command: 'chown -R www-data:www-data /var/www/development',
+    //            options: {
+    //                host: 'www.localhost.com',
+    //                username: 'root',
+    //                port: 2222,
+    //                privateKey: grunt.file.read("D:/Users/YOUR_USER/.ssh/id_containers_rsa")
+    //            }
+    //        }
+    //    },
     };
     
     grunt.initConfig(config); 
@@ -54,6 +80,8 @@ module.exports = function (grunt) {
     // Task definition
     // grunt.registerTask('build', ['less', 'typescript', 'copy', 'concat_sourcemap', 'uglify']);
     // grunt.registerTask('default', ['watch']);
+    grunt.loadNpmTasks('grunt-rsync');
+    //grunt.loadNpmTasks('grunt-ssh');
 
     grunt.registerTask('build', ['less', 'copy']);
 };
