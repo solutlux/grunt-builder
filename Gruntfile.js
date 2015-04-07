@@ -40,16 +40,16 @@ module.exports = function (grunt) {
         },
         rsync: {
             options: {
-                args: ['-avz', '--verbose'],
-                exclude: ['.git*', 'cache', 'log'],
+                args: "<%= project.rsyncArgs %>",
+                exclude: "<%= project.rsyncExclude %>",
                 recursive: true
             },
-            development: {
+            dev: {
                 options: {
-                      src: "<%= project.cssFile %>",
-                      dest: "<%= project.remoteGrunt %>/<%= project.cssGrunt %>",
-                      host: 'almeyda@almeyda.biz',
-                 //   port: 2222
+                    src: "<%= project.localSrc %>",
+                    dest: "<%= project.remoteSrc %>",
+                    host: "<%= project.remoteHost %>",
+                    port: "<%= project.remotePort %>"
                 }
             }
         },
