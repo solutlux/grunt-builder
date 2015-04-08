@@ -28,21 +28,16 @@ module.exports = function (grunt) {
         concat: {
             dev: {
                 src: "<%= project.srcJsFiles %>",
-                dest: "<%= project.implodedJsFile %>",
+                dest: "<%= project.publishedJsFiles %>/<%= project.implodedJsFile %>",
                 options : {
                     sourceMap: true
                 }    
             },
         },
         uglify: {
-            options : {
-              sourceMap : true,
-              sourceMapIncludeSources : true,
-              sourceMapIn : '.tmp/main.js.map'
-            },
-            dist : {
-              src  : '<%= concat.dist.dest %>',
-              dest : 'www/main.min.js'
+            prod : {
+                src: "<%= project.publishedJsFiles %>/<%= project.implodedJsFile %>",
+                dest: "<%= project.publishedJsFiles %>/<%= project.compressedJsFile %>",
             }
         },
         copy: {
@@ -104,4 +99,5 @@ module.exports = function (grunt) {
     // Task definition
     grunt.registerTask('build', ['less', 'copy']);
     grunt.registerTask('deploy:dev', ['less:dev', 'concat:dev', 'copy', 'rsync', 'sshexec']);
+    grunt.registerTask('deploy:global', ['rsync', 'sshexec']);
 };
