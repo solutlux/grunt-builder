@@ -63,15 +63,15 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     src: "<%= project.localSrc %>",
-                    dest: "<%= project.remoteSrc %>",
+                    dest: "<%= project.remoteDest %>",
                     host: "<%= project.remoteUsername %>@<%= project.remoteHost %>",
                     port: "<%= project.remotePort %>"
                 }
-            }
+            },
         },
         sshexec: {
             prod: {
-                command: "<%= project.sshCommands %>",
+                command: "<%= project.sshProdCommand %>",
                 options: {
                     username: "<%= project.remoteUsername %>",
                     host: "<%= project.remoteHost %>",
@@ -80,6 +80,11 @@ module.exports = function (grunt) {
                 }
             }
         },
+        shell: {
+            local: {
+                command: "<%= project.shellLocalCommand %>",
+            },
+        }
     };
     
     grunt.initConfig(config); 
@@ -95,9 +100,12 @@ module.exports = function (grunt) {
     //grunt.loadNpmTasks('grunt-prompt');
     grunt.loadNpmTasks('grunt-rsync');
     grunt.loadNpmTasks('grunt-ssh');
+    grunt.loadNpmTasks('grunt-shell');
 
     // Task definition
     grunt.registerTask('build', ['less', 'copy']);
     grunt.registerTask('deploy:dev', ['less:dev', 'concat:dev', 'copy', 'rsync', 'sshexec']);
+    grunt.registerTask('deploy:less', ['less:dev', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:global', ['rsync', 'sshexec']);
+    
 };
