@@ -7,12 +7,18 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     paths: ["<%= project.path %>"],
-                    sourceMap: true,
-                    sourceMapURL: "<%= project.cssSourceMapURL %>"
+                    sourceMap: true
+                   
                 },
-                files: {
-                    "<%= project.cssFile %>": "<%= project.lessFolder %>/<%= project.lessFile %>"
-                }
+                files: [
+                    {
+                        expand: true,
+                        cwd: "<%= project.lessFolder %>",
+                        src: "<%= project.lessFile %>",
+                        dest: "<%= project.cssFolder %>",
+                        ext: ".css"
+                    }
+                ]
             },
             prod: {
                 options: {
@@ -94,7 +100,7 @@ module.exports = function (grunt) {
     // grunt.loadNpmTasks('grunt-typescript');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('assemble-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     //grunt.loadNpmTasks('grunt-prompt');
