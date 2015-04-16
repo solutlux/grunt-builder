@@ -33,8 +33,7 @@ module.exports = function (grunt) {
         },
         concat: {
             dev: {
-                src: "<%= project.srcJsFiles %>",
-                dest: "<%= project.publishedJsFiles %>/<%= project.implodedJsFile %>",
+                files: "<%= project.concatFiles %>",
                 options : {
                     sourceMap: true
                 }    
@@ -111,6 +110,7 @@ module.exports = function (grunt) {
     // Task definition
     grunt.registerTask('build', ['less', 'copy']);
     grunt.registerTask('deploy:dev', ['less:dev', 'concat:dev', 'copy', 'rsync', 'sshexec']);
+    grunt.registerTask('deploy:skin', ['rsync', 'sshexec']);
     grunt.registerTask('deploy:less', ['less:dev', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:global', ['rsync', 'sshexec']);
     
