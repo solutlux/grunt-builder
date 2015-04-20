@@ -2,13 +2,14 @@ module.exports = function (grunt) {
 // Project configuration.
     var config = {
         pkg: grunt.file.readJSON('package.json'),
+        key: grunt.file.readJSON('key.json'),
         project: grunt.file.readJSON(grunt.option('project')+'.json'),
         less: {
-            dev: {
+            prod: {
                 options: {
                     paths: ["<%= project.path %>"],
-                    sourceMap: true
-                   
+                    sourceMap: "<%= project.cssSitemap %>",
+                    compress: true
                 },
                 files: [
                     {
@@ -19,16 +20,6 @@ module.exports = function (grunt) {
                         ext: ".css"
                     }
                 ]
-            },
-            prod: {
-                options: {
-                    paths: ["<%= project.path %>"],
-                    //sourceMap: true,
-                    compress: true
-                },
-                files: {
-                    "<%= project.compressedCssFile %>": "<%= project.lessFolder %>/<%= project.lessFile %>"
-                }
             }
         },
         concat: {
@@ -40,22 +31,33 @@ module.exports = function (grunt) {
             },
         },
         uglify: {
-            prod : {
-                src: "<%= project.publishedJsFiles %>/<%= project.implodedJsFile %>",
-                dest: "<%= project.publishedJsFiles %>/<%= project.compressedJsFile %>",
+            prod: {
+                files: [{
+                    expand: true,
+                    cwd: "<%= project.jsFolder %>",
+                    src: '**/*.js',
+                    dest: "<%= project.jsFolder %>",
+                    ext: ".min.js"
+                }]
             }
         },
         copy: {
             main: {
                 files: [
-                    {expand: true, flatten: true, src: ["<%= project.fontsFile %>"], dest: "<%= project.fontsCopy %>", filter: 'isFile'}
+                    {
+                        expand: true, 
+                        flatten: true, 
+                        src: ["<%= project.fontsFile %>"], 
+                        dest: "<%= project.fontsCopy %>", 
+                        filter: 'isFile'
+                    }
                ]
             }
         },
         watch: {
             scripts: {
-                files: ['<%= project.lessFolder %>/*.less'],
-                tasks: ['less:dev'],
+                files: "<%= project.watchFiles %>",
+                tasks: "<%= project.watchTasks %>",
             },
         },
         rsync: {
@@ -76,12 +78,12 @@ module.exports = function (grunt) {
         },
         sshexec: {
             prod: {
-                command: "<%= project.sshProdCommand %>",
+                command: "<%= project.sshCommands %>",
                 options: {
                     username: "<%= project.remoteUsername %>",
                     host: "<%= project.remoteHost %>",
                     port: "<%= project.remotePort %>",
-                    privateKey: "<%= grunt.file.read(project.privateKeyPath) %>"
+                    privateKey: "<%= grunt.file.read(key.privateKeyPath) %>"
                 }
             }
         },
@@ -109,9 +111,9 @@ module.exports = function (grunt) {
 
     // Task definition
     grunt.registerTask('build', ['less', 'copy']);
-    grunt.registerTask('deploy:dev', ['less:dev', 'concat:dev', 'copy', 'rsync', 'sshexec']);
+    grunt.registerTask('deploy:dev', ['less', 'concat', 'copy', 'uglify', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:skin', ['rsync', 'sshexec']);
-    grunt.registerTask('deploy:less', ['less:dev', 'rsync', 'sshexec']);
+    grunt.registerTask('deploy:less', ['less', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:global', ['rsync', 'sshexec']);
     
 };
