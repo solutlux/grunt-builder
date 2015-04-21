@@ -111,6 +111,7 @@ module.exports = function (grunt) {
 
     // Task definition
     grunt.registerTask('build', ['less', 'copy']);
+    grunt.registerTask('deploy:shell', ['less', 'concat', 'copy', 'uglify', 'rsync', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:dev', ['less', 'concat', 'copy', 'uglify', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:skin', ['rsync', 'sshexec']);
     grunt.registerTask('deploy:less', ['less', 'rsync', 'sshexec']);
