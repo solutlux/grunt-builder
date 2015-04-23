@@ -54,6 +54,24 @@ module.exports = function (grunt) {
                ]
             }
         },
+		sprite:{
+			all: {
+				src: "<%= project.spritesFolder %>",
+				dest: "<%= project.spritesheetFile %>",
+				destCss: "<%= project.spriteLessFile %>",
+				imgPath: "<%= project.spriteImgPath %>",
+			}
+		},
+        imagemin: {
+            dynamic: {
+                files: [{
+                    expand: true,
+                    cwd: "<%= project.imagesFolder %>",
+                    src: ['**/*.{png,jpg,gif}'],
+                    dest: "<%= project.imagesMinFolder %>"
+                }]
+            }
+        },
         watch: {
             scripts: {
                 files: "<%= project.watchFiles %>",
@@ -104,6 +122,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('assemble-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-spritesmith');
+    grunt.loadNpmTasks('grunt-contrib-imagemin');
     //grunt.loadNpmTasks('grunt-prompt');
     grunt.loadNpmTasks('grunt-rsync');
     grunt.loadNpmTasks('grunt-ssh');
