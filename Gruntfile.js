@@ -24,13 +24,7 @@ module.exports = function (grunt) {
         },
         cssmin: {
             target: {
-                files: [{
-                    expand: true,
-                    cwd: "<%= project.cssFolder %>",
-                    src: ["*.css"],
-                    dest: "<%= project.cssFolder %>",
-                    ext: ".css"
-                }]
+                files: "<%= project.cssMinFiles %>"
             }
         },
         concat: {
