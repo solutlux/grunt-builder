@@ -22,6 +22,17 @@ module.exports = function (grunt) {
                 ]
             }
         },
+        cssmin: {
+            target: {
+                files: [{
+                    expand: true,
+                    cwd: "<%= project.cssFolder %>",
+                    src: ["*.css"],
+                    dest: "<%= project.cssFolder %>",
+                    ext: ".css"
+                }]
+            }
+        },
         concat: {
             dev: {
                 files: "<%= project.concatFiles %>",
@@ -35,7 +46,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: "<%= project.jsFolder %>",
-                    src: '**/*.js',
+                    src: ["**/*.js", "!*.min.js"],
                     dest: "<%= project.jsFolder %>",
                     ext: ".min.js"
                 }]
@@ -120,6 +131,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('assemble-less');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-spritesmith');
