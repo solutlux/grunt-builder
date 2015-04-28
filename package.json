@@ -1,23 +1,26 @@
 {
-    "name": "yii2-publisher",
-    "version": "0.0.1",
-    "description": "Publish yii2 file",
-    "main": "Gruntfile.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "assemble-less": "^0.7.0",
-        "grunt": "^0.4.5",
-        "grunt-contrib-concat": "^0.5.1",
-        "grunt-contrib-copy": "^0.8.0",
-        "grunt-contrib-uglify": "^0.9.1",
-        "grunt-contrib-watch": "^0.6.1",
-        "grunt-prompt": "^1.3.0",
-        "grunt-rsync": "^0.6.2",
-        "grunt-shell": "^1.1.2",
-        "grunt-ssh": "^0.12.2"
-    }
+  "name": "yii2-publisher",
+  "version": "0.0.1",
+  "description": "Publish yii2 file",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "assemble-less": "^0.7.0",
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-cssmin": "^0.12.2",
+    "grunt-contrib-imagemin": "^0.9.4",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-prompt": "^1.3.0",
+    "grunt-rsync": "^0.6.2",
+    "grunt-shell": "^1.1.2",
+    "grunt-spritesmith": "^4.5.3",
+    "grunt-ssh": "^0.12.2"
+  }
 }
