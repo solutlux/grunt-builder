@@ -14,6 +14,11 @@ module.exports = function (grunt) {
                 files: "<%= project.lessFiles %>"
             }
         },
+        cssmin: {
+            target: {
+                files: "<%= project.cssMinFiles %>"
+            }
+        },
         concat: {
             dev: {
                 files: "<%= project.concatFiles %>",
@@ -27,7 +32,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: "<%= project.jsFolder %>",
-                    src: '**/*.js',
+                    src: ["**/*.js", "!*.min.js"],
                     dest: "<%= project.jsFolder %>",
                     ext: ".min.js"
                 }]
@@ -44,6 +49,24 @@ module.exports = function (grunt) {
                         filter: 'isFile'
                     }
                ]
+            }
+        },
+		sprite:{
+			all: {
+				src: "<%= project.spritesFolder %>",
+				dest: "<%= project.spritesheetFile %>",
+				destCss: "<%= project.spriteLessFile %>",
+				imgPath: "<%= project.spriteImgPath %>",
+			}
+		},
+        imagemin: {
+            dynamic: {
+                files: [{
+                    expand: true,
+                    cwd: "<%= project.imagesFolder %>",
+                    src: ['**/*.{png,jpg,gif}'],
+                    dest: "<%= project.imagesMinFolder %>"
+                }]
             }
         },
         watch: {
@@ -94,8 +117,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('assemble-less');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-spritesmith');
+    grunt.loadNpmTasks('grunt-contrib-imagemin');
     //grunt.loadNpmTasks('grunt-prompt');
     grunt.loadNpmTasks('grunt-rsync');
     grunt.loadNpmTasks('grunt-ssh');
