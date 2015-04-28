@@ -11,15 +11,7 @@ module.exports = function (grunt) {
                     sourceMap: "<%= project.cssSitemap %>",
                     compress: true
                 },
-                files: [
-                    {
-                        expand: true,
-                        cwd: "<%= project.lessFolder %>",
-                        src: "<%= project.lessFile %>",
-                        dest: "<%= project.cssFolder %>",
-                        ext: ".css"
-                    }
-                ]
+                files: "<%= project.lessFiles %>"
             }
         },
         concat: {
