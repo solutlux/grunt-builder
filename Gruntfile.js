@@ -9,7 +9,7 @@ module.exports = function (grunt) {
                 options: {
                     paths: ["<%= project.path %>"],
                     sourceMap: "<%= project.cssSitemap %>",
-                    compress: true
+                    compress: "<%= project.cssCompress %>",
                 },
                 files: "<%= project.lessFiles %>"
             }
