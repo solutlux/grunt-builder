@@ -106,6 +106,9 @@ module.exports = function (grunt) {
             local: {
                 command: "<%= project.shellLocalCommand %>",
             },
+            rsync: {
+                command: "<%= project.shellRsyncCommand %>",
+            },
         }
     };
     
@@ -133,6 +136,7 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy:dev', ['less', 'concat', 'copy', 'uglify', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:skin', ['rsync', 'sshexec']);
     grunt.registerTask('deploy:less', ['less', 'rsync', 'sshexec']);
+    grunt.registerTask('deploy:less-shell', ['less', 'shell:rsync', 'sshexec']);
     grunt.registerTask('deploy:global', ['rsync', 'sshexec']);
     
 };
