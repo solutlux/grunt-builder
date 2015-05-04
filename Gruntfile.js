@@ -7,8 +7,7 @@ module.exports = function (grunt) {
         less: {
             prod: {
                 options: {
-                    paths: ["<%= project.path %>"],
-                    sourceMap: "<%= project.cssSitemap %>",
+                    sourceMap: "<%= project.cssSourceMap %>",
                     compress: "<%= project.cssCompress %>",
                 },
                 files: "<%= project.lessFiles %>"
