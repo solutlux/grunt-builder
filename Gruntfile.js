@@ -2,7 +2,7 @@ module.exports = function (grunt) {
 // Project configuration.
     var config = {
         pkg: grunt.file.readJSON('package.json'),
-        key: grunt.file.readJSON('key.json'),
+        local: grunt.file.readJSON('local.json'),
         project: grunt.file.readJSON(grunt.option('project')+'.json'),
         less: {
             prod: {
@@ -98,7 +98,7 @@ module.exports = function (grunt) {
                     username: "<%= project.remoteUsername %>",
                     host: "<%= project.remoteHost %>",
                     port: "<%= project.remotePort %>",
-                    privateKey: "<%= grunt.file.read(key.privateKeyPath) %>"
+                    privateKey: "<%= grunt.file.read(local.privateKeyPath) %>"
                 }
             }
         },
