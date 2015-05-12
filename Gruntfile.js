@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         concat: {
             dev: {
                 files: "<%= project.concatFiles %>",
-                options : {
+                options: {
                     sourceMap: true
                 }    
             },
@@ -39,18 +39,10 @@ module.exports = function (grunt) {
         },
         copy: {
             main: {
-                files: [
-                    {
-                        expand: true, 
-                        flatten: true, 
-                        src: ["<%= project.fontsFile %>"], 
-                        dest: "<%= project.fontsCopy %>", 
-                        filter: 'isFile'
-                    }
-               ]
+                files: "<%= project.copyFiles %>",
             }
         },
-		sprite:{
+		sprite: {
 			all: {
 				src: "<%= project.spritesFolder %>",
 				dest: "<%= project.spritesheetFile %>",
