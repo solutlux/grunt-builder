@@ -27,14 +27,11 @@ module.exports = function (grunt) {
             },
         },
         uglify: {
+            options: {
+                mangle: "<%= project.uglifyMangle %>"
+            },
             prod: {
-                files: [{
-                    expand: true,
-                    cwd: "<%= project.jsFolder %>",
-                    src: ["**/*.js", "!*.min.js"],
-                    dest: "<%= project.jsFolder %>",
-                    ext: ".min.js"
-                }]
+                files: "<%= project.uglifyFiles %>",
             }
         },
         copy: {
