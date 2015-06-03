@@ -21,36 +21,25 @@ module.exports = function (grunt) {
         concat: {
             dev: {
                 files: "<%= project.concatFiles %>",
-                options : {
+                options: {
                     sourceMap: true
                 }    
             },
         },
         uglify: {
+            options: {
+                mangle: "<%= project.uglifyMangle %>"
+            },
             prod: {
-                files: [{
-                    expand: true,
-                    cwd: "<%= project.jsFolder %>",
-                    src: ["**/*.js", "!*.min.js"],
-                    dest: "<%= project.jsFolder %>",
-                    ext: ".min.js"
-                }]
+                files: "<%= project.uglifyFiles %>",
             }
         },
         copy: {
             main: {
-                files: [
-                    {
-                        expand: true, 
-                        flatten: true, 
-                        src: ["<%= project.fontsFile %>"], 
-                        dest: "<%= project.fontsCopy %>", 
-                        filter: 'isFile'
-                    }
-               ]
+                files: "<%= project.copyFiles %>",
             }
         },
-		sprite:{
+		sprite: {
 			all: {
 				src: "<%= project.spritesFolder %>",
 				dest: "<%= project.spritesheetFile %>",
