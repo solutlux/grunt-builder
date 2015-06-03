@@ -130,7 +130,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     // Task definition
-    grunt.registerTask('build', ['less', 'copy']);
+    grunt.registerTask('build', ['less', 'concat', 'copy', 'uglify']);
     grunt.registerTask('deploy:shell', ['less', 'concat', 'copy', 'uglify', 'rsync', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:dev', ['less', 'concat', 'copy', 'uglify', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:skin', ['rsync', 'sshexec']);
