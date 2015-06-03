@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     var config = {
         pkg: grunt.file.readJSON('package.json'),
         local: grunt.file.readJSON('local.json'),
-        project: grunt.file.readJSON(grunt.option('project')+'.json'),
+        project: grunt.file.readJSON('../config/'+grunt.option('project')+'.json'),
         less: {
             prod: {
                 options: {
@@ -49,12 +49,7 @@ module.exports = function (grunt) {
 		},
         imagemin: {
             dynamic: {
-                files: [{
-                    expand: true,
-                    cwd: "<%= project.imagesFolder %>",
-                    src: ['**/*.{png,jpg,gif}'],
-                    dest: "<%= project.imagesMinFolder %>"
-                }]
+                files: "<%= project.imageminFiles %>",
             }
         },
         watch: {
@@ -119,7 +114,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     // Task definition
-    grunt.registerTask('build', ['less', 'concat', 'copy', 'uglify']);
+    grunt.registerTask('build', ['imagemin', 'less', 'concat', 'copy', 'uglify']);
     grunt.registerTask('deploy:shell', ['less', 'concat', 'copy', 'uglify', 'rsync', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:dev', ['less', 'concat', 'copy', 'uglify', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:skin', ['rsync', 'sshexec']);
