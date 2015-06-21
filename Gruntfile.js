@@ -3,6 +3,7 @@ module.exports = function (grunt) {
     var config = {
         pkg: grunt.file.readJSON('package.json'),
         local: grunt.file.readJSON('local.json'),
+        env: grunt.file.readJSON('../config/'+grunt.option('environment')+'-env.json'),
         project: grunt.file.readJSON('../config/'+grunt.option('project')+'.json'),
         less: {
             prod: {
@@ -62,8 +63,7 @@ module.exports = function (grunt) {
             options: {
                 args: "<%= project.rsyncArgs %>",
                 exclude: "<%= project.rsyncExclude %>",
-                include: "<%= project.rsyncInclude %>",
-                recursive: true
+                include: "<%= project.rsyncInclude %>"
             },
             dev: {
                 options: {
@@ -81,7 +81,7 @@ module.exports = function (grunt) {
                     username: "<%= project.remoteUsername %>",
                     host: "<%= project.remoteHost %>",
                     port: "<%= project.remotePort %>",
-                    privateKey: "<%= grunt.file.read(local.privateKeyPath) %>"
+                    privateKey: "<%= grunt.file.read(env.privateKeyPath) %>"
                 }
             }
         },
