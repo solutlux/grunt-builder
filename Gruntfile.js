@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     var config = {
         pkg: grunt.file.readJSON('package.json'),
         local: grunt.file.readJSON('local.json'),
-        env: grunt.file.readJSON('../config/'+grunt.option('environment')+'-env.json'),
+        env: grunt.file.readJSON('../config/'+grunt.option('env')+'-env.json'),
         project: grunt.file.readJSON('../config/'+grunt.option('project')+'.json'),
         less: {
             prod: {
