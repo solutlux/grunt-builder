@@ -40,14 +40,14 @@ module.exports = function (grunt) {
                 files: "<%= project.copyFiles %>",
             }
         },
-		sprite: {
-			all: {
-				src: "<%= project.spritesFolder %>",
-				dest: "<%= project.spritesheetFile %>",
-				destCss: "<%= project.spriteLessFile %>",
-				imgPath: "<%= project.spriteImgPath %>",
-			}
-		},
+		spritely: { 
+            all: {
+                options: {
+                    destCSS: "<%= project.spriteDestFile %>"
+                },
+                files: "<%= project.spriteFiles %>" 
+            }
+        },		
         imagemin: {
             dynamic: {
                 files: "<%= project.imageminFiles %>",
@@ -107,6 +107,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-spritesmith');
+    grunt.loadNpmTasks('grunt-spritely');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     //grunt.loadNpmTasks('grunt-prompt');
     grunt.loadNpmTasks('grunt-rsync');
