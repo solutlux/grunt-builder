@@ -40,14 +40,10 @@ module.exports = function (grunt) {
                 files: "<%= project.copyFiles %>",
             }
         },
-		spritely: { 
-            all: {
-                options: {
-                    destCSS: "<%= project.spriteDestFile %>"
-                },
-                files: "<%= project.spriteFiles %>" 
-            }
-        },		
+		autospritesmith: {
+			options: "<%= project.spriteOptions %>",
+			all: "<%= project.spriteFiles %>",
+		},
         imagemin: {
             dynamic: {
                 files: "<%= project.imageminFiles %>",
