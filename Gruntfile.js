@@ -103,7 +103,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-spritesmith');
-    grunt.loadNpmTasks('grunt-spritely');
+	grunt.loadNpmTasks('grunt-autospritesmith');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     //grunt.loadNpmTasks('grunt-prompt');
     grunt.loadNpmTasks('grunt-rsync');
@@ -115,6 +115,8 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['imagemin', 'less', 'concat', 'copy', 'uglify']);
     grunt.registerTask('deploy:shell', ['newer:less', 'newer:concat', 'newer:copy', 'newer:uglify', 'rsync', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:dev', ['newer:less', 'newer:concat', 'newer:copy', 'newer:uglify', 'rsync', 'sshexec']);
+    grunt.registerTask('deploy:js', ['concat', 'newer:uglify', 'rsync', 'sshexec']);
+    grunt.registerTask('deploy:dev-full', ['autospritesmith', 'newer:imagemin', 'newer:less', 'newer:concat', 'newer:copy', 'newer:uglify', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:dev-shell', ['newer:less', 'newer:concat', 'newer:copy', 'newer:uglify', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:skin', ['rsync', 'sshexec']);
     grunt.registerTask('deploy:less', ['less', 'rsync', 'sshexec']);
