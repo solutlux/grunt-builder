@@ -103,7 +103,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-spritesmith');
-    grunt.loadNpmTasks('grunt-spritely');
+	grunt.loadNpmTasks('grunt-autospritesmith');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     //grunt.loadNpmTasks('grunt-prompt');
     grunt.loadNpmTasks('grunt-rsync');
