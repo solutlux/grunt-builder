@@ -120,7 +120,7 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy:dev-shell', ['newer:less', 'newer:concat', 'newer:copy', 'newer:uglify', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:skin', ['rsync', 'sshexec']);
     grunt.registerTask('deploy:less', ['less', 'rsync', 'sshexec']);
-    grunt.registerTask('deploy:less-shell', ['less', 'shell:rsync', 'sshexec']);
+    grunt.registerTask('deploy:less-shell', ['less', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:global', ['rsync', 'sshexec']);
     
 };
