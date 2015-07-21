@@ -3,8 +3,8 @@ module.exports = function (grunt) {
     var config = {
         pkg: grunt.file.readJSON('package.json'),
         local: grunt.file.readJSON('local.json'),
-        env: grunt.file.readJSON('../config/'+grunt.option('env')+'-env.json'),
-        project: grunt.file.readJSON('../config/'+grunt.option('project')+'.json'),
+        env: grunt.file.readJSON('../config/' + grunt.option('env') + '-env.json'),
+        project: grunt.file.readJSON('../config/' + grunt.option('project') + '.json'),
         less: {
             prod: {
                 options: {
@@ -24,7 +24,7 @@ module.exports = function (grunt) {
                 files: "<%= project.concatFiles %>",
                 options: {
                     sourceMap: true
-                }    
+                }
             },
         },
         uglify: {
@@ -42,15 +42,15 @@ module.exports = function (grunt) {
         },
         clean: {
             options: {
-                 force: true
+                force: true
             },
             before: "<%= project.cleanBeforeFiles %>",
             after: "<%= project.cleanAfterFiles %>"
         },
-		autospritesmith: {
-			options: "<%= project.spriteOptions %>",
-			all: "<%= project.spriteFiles %>",
-		},
+        autospritesmith: {
+            options: "<%= project.spriteOptions %>",
+            all: "<%= project.spriteFiles %>",
+        },
         imagemin: {
             dynamic: {
                 files: "<%= project.imageminFiles %>"
@@ -62,7 +62,7 @@ module.exports = function (grunt) {
             },
             main: {
                 files: "<%= project.renameFiles %>"
-            }    
+            }
         },
         watch: {
             scripts: {
@@ -105,10 +105,10 @@ module.exports = function (grunt) {
             },
         }
     };
-    
-    grunt.initConfig(config); 
-    
-    
+
+    grunt.initConfig(config);
+
+
 // Plugin loading
     // grunt.loadNpmTasks('grunt-typescript');
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -119,7 +119,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-spritesmith');
-	grunt.loadNpmTasks('grunt-autospritesmith');
+    grunt.loadNpmTasks('grunt-autospritesmith');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     //grunt.loadNpmTasks('grunt-prompt');
     grunt.loadNpmTasks('grunt-rsync');
@@ -138,5 +138,5 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy:less', ['less', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:less-shell', ['less', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:global', ['rsync', 'sshexec']);
-    
+
 };
