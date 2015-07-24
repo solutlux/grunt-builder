@@ -64,12 +64,7 @@ module.exports = function (grunt) {
                 files: "<%= project.renameFiles %>"
             }
         },
-        watch: {
-            scripts: {
-                files: "<%= project.watchFiles %>",
-                tasks: "<%= project.watchTasks %>",
-            },
-        },
+        watch: "<%= project.watchSetup %>",
         rsync: {
             options: {
                 args: "<%= project.rsyncArgs %>",
@@ -113,7 +108,7 @@ module.exports = function (grunt) {
     // grunt.loadNpmTasks('grunt-typescript');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-watch');
+    //grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('assemble-less');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -126,6 +121,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-ssh');
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-newer');
+    //grunt.loadNpmTasks('grunt-focus');
 
     // Task definition
     grunt.registerTask('build', ['imagemin', 'less', 'concat', 'copy', 'uglify']);
