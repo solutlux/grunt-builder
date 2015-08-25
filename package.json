@@ -28,6 +28,7 @@
     "grunt-rsync": "^0.6.2",
     "grunt-shell": "^1.1.2",
     "grunt-spritesmith": "^4.5.3",
-    "grunt-ssh": "^0.12.2"
+    "grunt-ssh": "^0.12.2",
+    "load-grunt-tasks": "^3.2.0"
   }
 }
