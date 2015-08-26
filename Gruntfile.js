@@ -23,14 +23,15 @@ module.exports = function (grunt) {
             dev: {
                 files: "<%= project.concatFiles %>",
                 options: {
-                    sourceMap: true
+                    sourceMap: "<%= project.concatSourceMap %>"
                 }
             },
         },
         uglify: {
             options: {
-                mangle: "<%= project.uglifyMangle %>"
-            },
+                mangle: "<%= project.uglifyMangle %>",
+				sourceMap: "<%= project.uglifySourceMap %>"
+			},	
             prod: {
                 files: "<%= project.uglifyFiles %>",
             }
