@@ -1,9 +1,9 @@
 module.exports = function (grunt) {
-    // Project configuration.
-    
-    var envJSON = grunt.file.readJSON('../config/' + grunt.option('env') + '-env.json');
+	// Project configuration.
+	
+	var envJSON = grunt.file.readJSON('../config/' + grunt.option('env') + '-env.json');
     var projectJSON = grunt.file.readJSON('../config/' + grunt.option('project') + '.json');
-    
+	
     var config = {
         pkg: grunt.file.readJSON('package.json'),
         local: grunt.file.readJSON('local.json'),
@@ -17,17 +17,6 @@ module.exports = function (grunt) {
                 },
                 files: "<%= project.lessFiles %>"
             }
-            /*only_nat: {
-                "expand": true,
-                "cwd": "../views/themes/naturacel/naturacel/less",
-                "src": [
-                    "style.less",
-                    "home.less",
-                    "how-it-works.less"
-                ],
-                "dest": "../public_html/wp-content/themes/naturacel/css/",
-                "ext": ".css"
-            },*/
         },
         cssmin: {
             target: {
@@ -38,14 +27,15 @@ module.exports = function (grunt) {
             dev: {
                 files: "<%= project.concatFiles %>",
                 options: {
-                    sourceMap: true
+                    sourceMap: "<%= project.concatSourceMap %>"
                 }
             },
         },
         uglify: {
             options: {
-                mangle: "<%= project.uglifyMangle %>"
-            },
+                mangle: "<%= project.uglifyMangle %>",
+				sourceMap: "<%= project.uglifySourceMap %>"
+			},	
             prod: {
                 files: "<%= project.uglifyFiles %>",
             }
@@ -69,15 +59,6 @@ module.exports = function (grunt) {
         imagemin: {
             dynamic: {
                 files: "<%= project.imageminFiles %>"
-            },
-            only_nat: {
-                "expand": true,
-                "cwd": "../views/themes/naturacel/naturacel",
-                "src": [
-                    "{images,sprites}/**/*.{png,jpg,gif}",
-                    "!sprites/*-sprite/**"
-                ],
-                "dest": "../public_html/wp-content/themes/naturacel/"
             }
         },
         rename: {
@@ -136,48 +117,45 @@ module.exports = function (grunt) {
                 command: "<%= project.shellRsyncCommand %>",
             },
         },
-        runner: projectJSON.runnerTaskList
+		runner: projectJSON.runnerTaskList
     };
-    
-    grunt.initConfig(config);
-    
-    // Plugin loading
-    // grunt.loadNpmTasks('grunt-typescript');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('assemble-less');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-spritesmith');
-    grunt.loadNpmTasks('grunt-autospritesmith');
-    grunt.loadNpmTasks('grunt-contrib-imagemin');
-    //grunt.loadNpmTasks('grunt-prompt');
-    grunt.loadNpmTasks('grunt-rsync');
-    grunt.loadNpmTasks('grunt-ssh');
-    grunt.loadNpmTasks('grunt-shell');
-    grunt.loadNpmTasks('grunt-newer');
 
+    grunt.initConfig(config);
+
+
+	// Plugin loading
+    // grunt.loadNpmTasks('grunt-typescript');
+    require('load-grunt-tasks')(grunt);
+    grunt.loadNpmTasks('assemble-less');
+    
     // Task definition
-    grunt.registerTask('build', ['imagemin', 'less', 'concat', 'copy', 'uglify']);
-    grunt.registerTask('deploy:shell', ['clean:before', 'newer:less', 'concat', 'newer:copy', 'uglify', 'rsync', 'shell:local', 'sshexec']);
-    grunt.registerTask('deploy:dev', ['clean:before', 'newer:less', 'concat', 'newer:copy', 'uglify', 'clean:after', 'rsync', 'sshexec']);
-    grunt.registerTask('deploy:dev-shell', ['newer:less', 'concat', 'newer:copy', 'uglify', 'shell:local', 'sshexec']);
+    grunt.registerTask('build', ['imagemin', 'less', 'concat', 'uglify', 'copy']);
+    grunt.registerTask('deploy:shell', ['clean:before', 'newer:less', 'concat', 'uglify', 'newer:copy', 'rsync', 'shell:local', 'sshexec']);
+    grunt.registerTask('deploy:dev', ['clean:before', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after', 'rsync', 'sshexec']);
+    grunt.registerTask('deploy:dev-shell', ['newer:less', 'concat', 'uglify', 'newer:copy', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:js', ['concat', 'uglify', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:js-shell', ['concat', 'uglify', 'shell:local', 'sshexec']);
-    grunt.registerTask('deploy:dev-full', ['clean:before', 'autospritesmith', 'newer:imagemin', 'newer:less', 'concat', 'newer:copy', 'uglify', 'clean:after', 'rsync', 'sshexec']);
-    grunt.registerTask('deploy:dev-full-shell', ['clean:before', 'autospritesmith', 'newer:imagemin', 'newer:less', 'concat', 'newer:copy', 'uglify', 'clean:after', 'shell:local', 'sshexec']);
+    grunt.registerTask('deploy:dev-full', ['clean:before', 'autospritesmith', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after', 'rsync', 'sshexec']);
+    grunt.registerTask('deploy:dev-full-shell', ['clean:before', 'autospritesmith', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:skin', ['rsync', 'sshexec']);
     grunt.registerTask('deploy:less', ['newer:less', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:less-shell', ['newer:less', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:global', ['rsync', 'sshexec']);
     grunt.registerTask('deploy:global-shell', ['shell:local', 'sshexec']);
-
-    grunt.registerMultiTask('runner', 'Log stuff.', function () {
-        config.project = grunt.file.readJSON('../config/' + this.data.project + '.json');
-        config.env = grunt.file.readJSON('../config/' + this.data.env + '-env.json');
+	
+	grunt.registerMultiTask('runner', 'Launch tasks for various projects', function () {
+        // set new configuration
+		config.project = grunt.file.readJSON('../config/' + this.data.project + '.json');
+        if (this.data.env) config.env = grunt.file.readJSON('../config/' + this.data.env + '-env.json');
         grunt.initConfig(config);
-        grunt.task.run(this.data.task);
+        
+		// run task with new configuration
+		grunt.task.run(this.data.task);
+		
+		// restore original configuration
+		/*config.project = envJSON;
+        config.env = projectJSON;
+        grunt.initConfig(config);*/
     });
+	
 };
