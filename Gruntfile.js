@@ -155,6 +155,9 @@ module.exports = function (grunt) {
         if (this.data.env)
             this.data.env = grunt.file.readJSON('../config/' + this.data.env + '-env.json');
         
+        if (this.data.docRootPath)
+            this.data.env.docRootPath = this.data.docRootPath;
+        
         // replace original configuration
         for (var field in this.data) 
             config[field] = this.data[field];
