@@ -5,7 +5,7 @@ module.exports = function (grunt) {
     var projectJSON = grunt.file.readJSON('../config/' + grunt.option('project') + '.json');
     
     function cloneConfig() {
-        return {
+        var config = {
             pkg: grunt.file.readJSON('package.json'),
             local: grunt.file.readJSON('local.json'),
             env: envJSON,
@@ -118,8 +118,14 @@ module.exports = function (grunt) {
                     command: "<%= project.shellRsyncCommand %>",
                 },
             },
-            runner: projectJSON.runnerTaskList
         }
+        
+        if (projectJSON.runnerTaskList && Object.keys(projectJSON.runnerTaskList).length)
+            config.runner = projectJSON.runnerTaskList;
+        else
+            config.runner = { none: {} };
+        
+        return config;
     }
     
     grunt.initConfig(cloneConfig());
@@ -132,6 +138,9 @@ module.exports = function (grunt) {
     // Task definition
     grunt.registerTask('build-full', ['clean:before', 'runner', 'autospritesmith', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
     grunt.registerTask('build', ['imagemin', 'less', 'concat', 'uglify', 'copy']);
+    
+    grunt.registerTask('copyless', ['less', 'copy', 'shell:local', 'sshexec']);
+    
     grunt.registerTask('deploy:shell', ['clean:before', 'newer:less', 'concat', 'uglify', 'newer:copy', 'rsync', 'shell:local', 'sshexec']);
     grunt.registerTask('deploy:dev', ['clean:before', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after', 'rsync', 'sshexec']);
     grunt.registerTask('deploy:dev-shell', ['newer:less', 'concat', 'uglify', 'newer:copy', 'shell:local', 'sshexec']);
@@ -146,6 +155,11 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy:global-shell', ['shell:local', 'sshexec']);
 
     grunt.registerMultiTask('runner', 'Launch tasks for various projects', function () {
+        if (!this.data.task) {
+            console.log("Task not found");
+            return;
+        }
+        
         // set new configuration
         var config = cloneConfig();
         
