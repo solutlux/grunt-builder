@@ -108,6 +108,15 @@ module.exports = function (grunt) {
                         port: "<%= project.remotePort %>",
                         privateKey: "<%= grunt.file.read(env.privateKeyPath) %>"
                     }
+                },
+                deploy: {
+                    command: "<%= project.sshDeployCommands %>",
+                    options: {
+                        username: "<%= project.remoteUsername %>",
+                        host: "<%= project.remoteHost %>",
+                        port: "<%= project.remotePort %>",
+                        privateKey: "<%= grunt.file.read(env.privateKeyPath) %>"
+                    }
                 }
             },
             shell: {
