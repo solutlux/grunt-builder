@@ -62,6 +62,11 @@ module.exports = function (grunt) {
                     files: "<%= project.imageminFiles %>"
                 }
             },
+            tinyimg: {
+                dynamic: {
+                    files: "<%= project.imageminFiles %>"
+                }
+            },
             rename: {
                 options: {
                     force: true
@@ -139,8 +144,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('assemble-less');
 
     // Task definition
-    grunt.registerTask('build-full', ['clean:before', 'runner', 'autospritesmith', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
-    grunt.registerTask('build', ['imagemin', 'less', 'concat', 'uglify', 'copy']);
+    grunt.registerTask('build-full', ['clean:before', 'runner', 'autospritesmith', 'newer:tinyimg', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
+    grunt.registerTask('build', ['tinyimg', 'less', 'concat', 'uglify', 'copy']);
     
     grunt.registerTask('copyless', ['less', 'copy', 'shell:local', 'sshexec:prod']);
     
