@@ -145,7 +145,7 @@ module.exports = function (grunt) {
 
     // Task definition
     grunt.registerTask('build-full', ['clean:before', 'runner', 'autospritesmith', 'newer:tinyimg', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
-    grunt.registerTask('build', ['tinyimg', 'imagemin', 'less', 'concat', 'uglify', 'copy']);
+    grunt.registerTask('build', ['imagemin', 'tinyimg', 'less', 'concat', 'uglify', 'copy']);
     
     grunt.registerTask('copyless', ['less', 'copy', 'shell:local', 'sshexec:prod']);
     
