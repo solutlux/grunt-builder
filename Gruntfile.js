@@ -150,7 +150,7 @@ module.exports = function (grunt) {
     grunt.registerTask('copyless', ['less', 'copy', 'shell:local', 'sshexec:prod']);
     
     grunt.registerTask('deploy:shell', ['clean:before', 'newer:less', 'concat', 'uglify', 'newer:copy', 'rsync', 'shell:local', 'sshexec:prod']);
-    grunt.registerTask('deploy:dev', ['clean:before', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after', 'rsync', 'sshexec:prod']);
+    grunt.registerTask('deploy:build-full', ['build-full', 'rsync', 'sshexec:prod']);
     grunt.registerTask('deploy:dev-shell', ['newer:less', 'concat', 'uglify', 'newer:copy', 'shell:local', 'sshexec:prod']);
     grunt.registerTask('deploy:js', ['concat', 'uglify', 'rsync', 'sshexec:prod']);
     grunt.registerTask('deploy:js-shell', ['concat', 'uglify', 'shell:local', 'sshexec:prod']);
