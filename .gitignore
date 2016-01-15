@@ -3,3 +3,4 @@
 /.ftppass
 /.grunt/ftpush/build.json
 /npm-debug.log
+/commands.txt
