@@ -161,6 +161,7 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy:less-shell', ['newer:less', 'shell:local', 'sshexec:prod']);
     grunt.registerTask('deploy:global', ['rsync', 'sshexec:prod']);
     grunt.registerTask('deploy:global-shell', ['shell:local', 'sshexec:prod']);
+    grunt.registerTask('deploy:runner', ['runner', 'deploy:global']);
 
     grunt.registerMultiTask('runner', 'Launch tasks for various projects', function () {
         if (!this.data.task) {
@@ -170,25 +171,47 @@ module.exports = function (grunt) {
         
         // set new configuration
         var config = cloneConfig();
+        var configOriginal = {};
         
         // set specific configuration
-        if (this.data.project)
+        if (this.data.project) {
             this.data.project = grunt.file.readJSON('../config/' + this.data.project + '.json');
+        }
         
-        if (this.data.env)
+        
+        if (this.data.env) {
             this.data.env = grunt.file.readJSON('../config/' + this.data.env + '-env.json');
+        }
         
-        if (this.data.docRootPath)
+        if (this.data.docRootPath) {
             this.data.env.docRootPath = this.data.docRootPath;
+        }
         
+        var configRestore = false;
         // replace original configuration
-        for (var field in this.data) 
+        for (var field in this.data) {
+            if (config[field]) {
+                configRestore = true;
+                configOriginal[field] = config[field];
+            }
             config[field] = this.data[field];
+        }
         
         // create new config
         grunt.initConfig(config);
         
         // run task with new configuration
         grunt.task.run(this.data.task);
+       
+       
+        for (var field in configOriginal) {
+            config[field] = configOriginal[field];
+        }
+        
+        //if (configOriginal)
+        //grunt.config.set('project', currentProject);
+        
+        console.log(grunt.config);
+                
     });
 };
