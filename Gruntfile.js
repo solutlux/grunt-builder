@@ -1,15 +1,14 @@
 module.exports = function (grunt) {
     // Project configuration.
 
-    var envJSON = grunt.file.readJSON('../config/' + grunt.option('env') + '-env.json');
-    var projectJSON = grunt.file.readJSON('../config/' + grunt.option('project') + '.json');
-    
     function cloneConfig() {
+        
         var config = {
             pkg: grunt.file.readJSON('package.json'),
             local: grunt.file.readJSON('local.json'),
-            env: envJSON,
-            project: projectJSON,
+            envt: grunt.file.readJSON('../config/' + grunt.option('envt') + '-env.json'),
+            project: grunt.file.readJSON('../config/' + grunt.option('project') + '.json'),
+            projectname: grunt.option('project'),
             less: {
                 prod: {
                     options: {
@@ -115,7 +114,7 @@ module.exports = function (grunt) {
                     username: "<%= project.remoteUsername %>",
                     host: "<%= project.remoteHost %>",
                     port: "<%= project.remotePort %>",
-                    privateKey: "<%= grunt.file.read(env.privateKeyPath) %>"
+                    privateKey: "<%= grunt.file.read(envt.privateKeyPath) %>"
                 }
             },
             shell: {
@@ -126,12 +125,29 @@ module.exports = function (grunt) {
                     command: "<%= project.shellRsyncCommand %>",
                 },
             },
+            run_grunt: {
+                options: {
+                    minimumFiles: 1
+                },
+                target: {
+                    options: {
+                        log: true,
+                        task: ["shell:local"],
+                        gruntOptions: {
+                            envt: "kupizamok",
+                            project: "core.merkalt"
+                        }
+                    },
+                    src: ["Gruntfile.js"]
+                },
+            },
         }
         
-        if (projectJSON.runnerTaskList && Object.keys(projectJSON.runnerTaskList).length)
-            config.runner = projectJSON.runnerTaskList;
-        else
+        if (config.project.runnerTaskList && Object.keys(config.project.runnerTaskList).length) {
+            config.runner = config.project.runnerTaskList;
+        } else {
             config.runner = { none: {} };
+        }
         
         return config;
     }
@@ -142,7 +158,7 @@ module.exports = function (grunt) {
     // grunt.loadNpmTasks('grunt-typescript');
     require('load-grunt-tasks')(grunt);
     grunt.loadNpmTasks('assemble-less');
-
+    
     // Task definition
     grunt.registerTask('build-full', ['clean:before', 'runner', 'autospritesmith', 'newer:tinyimg', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
     grunt.registerTask('build', ['imagemin', 'tinyimg', 'less', 'concat', 'uglify', 'copy']);
@@ -169,22 +185,31 @@ module.exports = function (grunt) {
             return;
         }
         
+        //console.log(process.env);
+        
+        var cb = this.async();
+        var child = grunt.util.spawn({
+            grunt: true,
+            args: [this.data.task, '--envt=kupizamok', '--project=core.merkalt', '-v'],
+            opts: {
+            }
+        }, function(error, result, code) {
+            cb();
+        });
+
+        child.stdout.pipe(process.stdout);
+        child.stderr.pipe(process.stderr);
+        
+        /*
         // set new configuration
         var config = cloneConfig();
         var configOriginal = {};
         
-        // set specific configuration
-        if (this.data.project) {
-            this.data.project = grunt.file.readJSON('../config/' + this.data.project + '.json');
-        }
+       
         
         
-        if (this.data.env) {
-            this.data.env = grunt.file.readJSON('../config/' + this.data.env + '-env.json');
-        }
-        
-        if (this.data.docRootPath) {
-            this.data.env.docRootPath = this.data.docRootPath;
+        if (this.data.envt) {
+            this.data.envt = grunt.file.readJSON('../config/' + this.data.envt + '-env.json');
         }
         
         var configRestore = false;
@@ -194,24 +219,25 @@ module.exports = function (grunt) {
                 configRestore = true;
                 configOriginal[field] = config[field];
             }
-            config[field] = this.data[field];
+            //config[field] = this.data[field];
         }
         
         // create new config
-        grunt.initConfig(config);
+        //grunt.initConfig(config);
         
         // run task with new configuration
-        grunt.task.run(this.data.task);
-       
+        //grunt.task.run(this.data.task);
+        
+        //console.log(configOriginal);
        
         for (var field in configOriginal) {
-            config[field] = configOriginal[field];
+            //grunt.config.data[field] = configOriginal[field];
         }
         
         //if (configOriginal)
         //grunt.config.set('project', currentProject);
         
-        console.log(grunt.config);
-                
+        //console.log(grunt.config.data.project);
+            */    
     });
 };
