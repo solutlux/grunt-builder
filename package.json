@@ -1,5 +1,5 @@
 {
-  "name": "universal deployer",
+  "name": "universal_deployer",
   "version": "0.1.0",
   "description": "universal project deployer",
   "main": "Gruntfile.js",
