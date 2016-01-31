@@ -7,6 +7,7 @@ module.exports = function (grunt) {
             pkg: grunt.file.readJSON('package.json'),
             local: grunt.file.readJSON('local.json'),
             envt: grunt.file.readJSON('../config/' + grunt.option('envt') + '-env.json'),
+            envtname: grunt.option('envt'),
             project: grunt.file.readJSON('../config/' + grunt.option('project') + '.json'),
             projectname: grunt.option('project'),
             less: {
@@ -88,21 +89,6 @@ module.exports = function (grunt) {
                     tasks: "<%= project.watchHtmlTasks %>",
                 }
             },
-            rsync: {
-                options: {
-                    args: "<%= project.rsyncArgs %>",
-                    exclude: "<%= project.rsyncExclude %>",
-                    include: "<%= project.rsyncInclude %>"
-                },
-                dev: {
-                    options: {
-                        src: "<%= project.localSrc %>",
-                        dest: "<%= project.remoteDest %>",
-                        host: "<%= project.remoteUsername %>@<%= project.remoteHost %>",
-                        port: "<%= project.remotePort %>"
-                    }
-                },
-            },
             sshexec: {
                 prod: {
                     command: "<%= project.sshCommands %>",
@@ -127,26 +113,20 @@ module.exports = function (grunt) {
             },
             run_grunt: {
                 options: {
-                    minimumFiles: 1
+                    minimumFiles: 1,
+                    log: true,
                 },
                 target: {
                     options: {
-                        log: true,
-                        task: ["shell:local"],
+                        task: "<%= project.gruntTasks %>",
                         gruntOptions: {
-                            envt: "kupizamok",
-                            project: "core.merkalt"
+                            envt: "<%= project.gruntEnvt %>",
+                            project: "<%= project.gruntProject %>"
                         }
                     },
                     src: ["Gruntfile.js"]
                 },
             },
-        }
-        
-        if (config.project.runnerTaskList && Object.keys(config.project.runnerTaskList).length) {
-            config.runner = config.project.runnerTaskList;
-        } else {
-            config.runner = { none: {} };
         }
         
         return config;
@@ -178,66 +158,4 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy:global', ['rsync', 'sshexec:prod']);
     grunt.registerTask('deploy:global-shell', ['shell:local', 'sshexec:prod']);
     grunt.registerTask('deploy:runner', ['runner', 'deploy:global']);
-
-    grunt.registerMultiTask('runner', 'Launch tasks for various projects', function () {
-        if (!this.data.task) {
-            console.log('Task not found');
-            return;
-        }
-        
-        //console.log(process.env);
-        
-        var cb = this.async();
-        var child = grunt.util.spawn({
-            grunt: true,
-            args: [this.data.task, '--envt=kupizamok', '--project=core.merkalt', '-v'],
-            opts: {
-            }
-        }, function(error, result, code) {
-            cb();
-        });
-
-        child.stdout.pipe(process.stdout);
-        child.stderr.pipe(process.stderr);
-        
-        /*
-        // set new configuration
-        var config = cloneConfig();
-        var configOriginal = {};
-        
-       
-        
-        
-        if (this.data.envt) {
-            this.data.envt = grunt.file.readJSON('../config/' + this.data.envt + '-env.json');
-        }
-        
-        var configRestore = false;
-        // replace original configuration
-        for (var field in this.data) {
-            if (config[field]) {
-                configRestore = true;
-                configOriginal[field] = config[field];
-            }
-            //config[field] = this.data[field];
-        }
-        
-        // create new config
-        //grunt.initConfig(config);
-        
-        // run task with new configuration
-        //grunt.task.run(this.data.task);
-        
-        //console.log(configOriginal);
-       
-        for (var field in configOriginal) {
-            //grunt.config.data[field] = configOriginal[field];
-        }
-        
-        //if (configOriginal)
-        //grunt.config.set('project', currentProject);
-        
-        //console.log(grunt.config.data.project);
-            */    
-    });
 };
