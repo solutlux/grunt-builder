@@ -119,6 +119,7 @@ module.exports = function (grunt) {
                 target: {
                     options: {
                         task: "<%= project.gruntTasks %>",
+                        expectFail: true,
                         gruntOptions: {
                             envt: "<%= project.gruntEnvt %>",
                             project: "<%= project.gruntProject %>"
@@ -140,22 +141,15 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('assemble-less');
     
     // Task definition
-    grunt.registerTask('build-full', ['clean:before', 'runner', 'autospritesmith', 'newer:tinyimg', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
+    grunt.registerTask('build-full', ['clean:before', 'run_grunt', 'autospritesmith', 'newer:tinyimg', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
     grunt.registerTask('build', ['imagemin', 'tinyimg', 'less', 'concat', 'uglify', 'copy']);
     
     grunt.registerTask('copyless', ['less', 'copy', 'shell:local', 'sshexec:prod']);
     
     grunt.registerTask('deploy:shell', ['clean:before', 'newer:less', 'concat', 'uglify', 'newer:copy', 'rsync', 'shell:local', 'sshexec:prod']);
-    grunt.registerTask('deploy:build-full', ['build-full', 'rsync', 'sshexec:prod']);
-    grunt.registerTask('deploy:dev-shell', ['newer:less', 'concat', 'uglify', 'newer:copy', 'shell:local', 'sshexec:prod']);
-    grunt.registerTask('deploy:js', ['concat', 'uglify', 'rsync', 'sshexec:prod']);
-    grunt.registerTask('deploy:js-shell', ['concat', 'uglify', 'shell:local', 'sshexec:prod']);
-    grunt.registerTask('deploy:dev-full', ['build-full', 'rsync', 'sshexec:prod']);
-    grunt.registerTask('deploy:dev-full-shell', ['build-full', 'shell:local', 'sshexec:prod']);
-    grunt.registerTask('deploy:skin', ['rsync', 'sshexec:prod']);
-    grunt.registerTask('deploy:less', ['newer:less', 'rsync', 'sshexec:prod']);
-    grunt.registerTask('deploy:less-shell', ['newer:less', 'shell:local', 'sshexec:prod']);
-    grunt.registerTask('deploy:global', ['rsync', 'sshexec:prod']);
-    grunt.registerTask('deploy:global-shell', ['shell:local', 'sshexec:prod']);
-    grunt.registerTask('deploy:runner', ['runner', 'deploy:global']);
+    grunt.registerTask('deploy:js', ['concat', 'uglify', 'shell:local', 'sshexec:prod']);
+    grunt.registerTask('deploy:dev-full', ['build-full', 'shell:local', 'sshexec:prod']);
+    grunt.registerTask('deploy:less', ['newer:less', 'shell:local', 'sshexec:prod']);
+    grunt.registerTask('deploy:global', ['shell:local', 'sshexec:prod']);
+    grunt.registerTask('deploy:grunt', ['run_grunt', 'deploy:global']);
 };
