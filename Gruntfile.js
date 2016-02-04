@@ -144,12 +144,13 @@ module.exports = function (grunt) {
     grunt.registerTask('build-full', ['clean:before', 'run_grunt', 'autospritesmith', 'newer:tinyimg', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
     grunt.registerTask('build', ['imagemin', 'tinyimg', 'less', 'concat', 'uglify', 'copy']);
     
-    grunt.registerTask('copyless', ['less', 'copy', 'shell:local', 'sshexec:prod']);
+    grunt.registerTask('deploy:copyless', ['less', 'copy', 'deploy:global']);
     
     grunt.registerTask('deploy:shell', ['clean:before', 'newer:less', 'concat', 'uglify', 'newer:copy', 'rsync', 'shell:local', 'sshexec:prod']);
     grunt.registerTask('deploy:js', ['concat', 'uglify', 'shell:local', 'sshexec:prod']);
     grunt.registerTask('deploy:dev-full', ['build-full', 'shell:local', 'sshexec:prod']);
-    grunt.registerTask('deploy:less', ['newer:less', 'shell:local', 'sshexec:prod']);
+    grunt.registerTask('deploy:copy', ['copy', 'deploy:global']);
+    grunt.registerTask('deploy:less', ['newer:less', 'deploy:global']);
     grunt.registerTask('deploy:global', ['shell:local', 'sshexec:prod']);
     grunt.registerTask('deploy:grunt', ['run_grunt', 'deploy:global']);
 };
