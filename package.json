@@ -22,6 +22,7 @@
     "grunt-focus": "^0.1.1",
     "grunt-ftp-deploy": "^0.1.10",
     "grunt-ftp-push": "^0.3.6",
+    "grunt-multi": "^0.0.6",
     "grunt-newer": "^1.1.1",
     "grunt-prompt": "^1.3.0",
     "grunt-rename": "^0.1.4",
