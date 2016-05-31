@@ -1,30 +1,20 @@
 module.exports = function (grunt) {
     // Project configuration.
 
+    /**
+     *  For multi-task use multi:deploy or multi:build
+     *  grunt multi:build --project=config1,config3,config2 --envt=config5
+     **/
+
     function cloneConfig() {
 
-        if (grunt.option('multi-single') == undefined) {
-            // Init arguments as variables
-            var projectname = grunt.option('project');
-            var project = grunt.file.readJSON('../config/' + projectname + '.json');
-            var envtname = grunt.option('envt');
-            var envt = grunt.file.readJSON('../config/' + envtname + '-env.json');
-        } else {
-            /*  Default values for grunt-multi,
-             will rewrited by Config array */
-            if (projectname == undefined) {
-                var projectname = '';
-            }
-            if (project == undefined) {
-                var project = [];
-            }
-            if (envtname == undefined) {
-                var envtname = '';
-            }
-            if (envt == undefined) {
-                var envt = [];
-            }
-        }
+        // Init arguments as variables
+        var projectname = grunt.option('project');
+        projectname = typeof(projectname) == 'string' ? projectname.split(',') : projectname;
+        var project = typeof(projectname) == 'Array' && projectname.length && projectname[0] ? grunt.file.readJSON('../config/' + projectname[0] + '.json') : [];
+        var envtname = grunt.option('envt');
+        var envt = envtname ? grunt.file.readJSON('../config/' + envtname + '-env.json') : [];
+        var projects = typeof(projectname) == 'Array' ? projectname : [];
 
         var config = {
             pkg: grunt.file.readJSON('package.json'),
@@ -134,33 +124,16 @@ module.exports = function (grunt) {
                     command: "<%= project.shellRsyncCommand %>"
                 }
             },
-            run_grunt: {
-                options: {
-                    minimumFiles: 1,
-                    log: true
-                },
-                target: {
-                    options: {
-                        task: "<%= project.gruntTasks %>",
-                        expectFail: true,
-                        gruntOptions: {
-                            envt: "<%= project.gruntEnvt %>",
-                            project: "<%= project.gruntProject %>"
-                        }
-                    },
-                    src: ["Gruntfile.js"]
-                }
-            },
             multi: {
                 build: {
                     options: {
                         maxSpawn: 1,
                         vars: {
-                            subProject: project.projects,
+                            project: projects,
                         },
                         config: {
-                            project: function( vars, rawConfig ){ return grunt.file.readJSON('../config/' + vars.subProject + '.json'); },
-                            projectname: function( vars, rawConfig ){ projectname = vars.subProject; return vars.subProject; },
+                            project: function( vars, rawConfig ){ return grunt.file.readJSON('../config/' + vars.project + '.json'); },
+                            projectname: function( vars, rawConfig ){ projectname = vars.project; return vars.project; },
                             envt: function( vars, rawConfig ){ return rawConfig.envt; }
                         },
                         tasks: ['build-full']
@@ -170,11 +143,11 @@ module.exports = function (grunt) {
                     options: {
                         maxSpawn: 1,
                         vars: {
-                            subProject: project.projects,
+                            project: projects,
                         },
                         config: {
-                            project: function( vars, rawConfig ){ return grunt.file.readJSON('../config/' + vars.subProject + '.json'); },
-                            projectname: function( vars, rawConfig ){ projectname = vars.subProject; return vars.subProject; },
+                            project: function( vars, rawConfig ){ return grunt.file.readJSON('../config/' + vars.project + '.json'); },
+                            projectname: function( vars, rawConfig ){ projectname = vars.project; return vars.project; },
                             envt: function( vars, rawConfig ){ return rawConfig.envt; }
                         },
                         tasks: ['deploy:dev-full']
@@ -195,7 +168,7 @@ module.exports = function (grunt) {
 
     // Task definition
     grunt.registerTask('js', ['concat', 'uglify']);
-    grunt.registerTask('build-full', ['clean:before', 'run_grunt', 'autospritesmith', 'newer:tinyimg', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
+    grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'newer:tinyimg', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
     grunt.registerTask('build', ['imagemin', 'tinyimg', 'less', 'concat', 'uglify', 'copy']);
 
     grunt.registerTask('deploy:copyless', ['less', 'copy', 'deploy:global']);
@@ -206,5 +179,5 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy:copy', ['copy', 'deploy:global']);
     grunt.registerTask('deploy:less', ['newer:less', 'deploy:global']);
     grunt.registerTask('deploy:global', ['shell:local', 'sshexec:prod']);
-    grunt.registerTask('deploy:grunt', ['run_grunt', 'deploy:global']);
+    grunt.registerTask('deploy:grunt', ['deploy:global']);
 };
