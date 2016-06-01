@@ -3,7 +3,9 @@ module.exports = function (grunt) {
 
     /**
      *  For multi-task use multi:deploy or multi:build
-     *  grunt multi:build --project=config1,config3,config2 --envt=config5
+     *  grunt run --project=config1,config3,config2 --envt=config5 --task=less,js
+     *  Config can has 'tasks' variable
+     *  Option 'task' will rewrite config if exists
      **/
 
     function cloneConfig() {
@@ -15,6 +17,7 @@ module.exports = function (grunt) {
         var envt = envtname ? grunt.file.readJSON('../config/' + envtname + '-env.json') : [];
         var projects = typeof(projectname) != 'undefined' ? projectname : [];
         projectname = projects.length ? projectname[0] : '';
+        var optionTasks = (new String(grunt.option('tasks'))).valueOf().split(',');
 
         var config = {
             pkg: grunt.file.readJSON('package.json'),
@@ -125,32 +128,24 @@ module.exports = function (grunt) {
                 }
             },
             multi: {
-                build: {
+                run: {
                     options: {
                         maxSpawn: 1,
                         vars: {
                             project: projects,
                         },
                         config: {
-                            project: function( vars, rawConfig ){ return grunt.file.readJSON('../config/' + vars.project + '.json'); },
+                            project: function( vars, rawConfig ){
+                                project = grunt.file.readJSON('../config/' + vars.project + '.json');
+                                if (optionTasks.length && optionTasks[0]) {
+                                    project.tasks = optionTasks;
+                                }
+                                return project;
+                            },
                             projectname: function( vars, rawConfig ){ return vars.project; },
                             envt: function( vars, rawConfig ){ return rawConfig.envt; }
                         },
-                        tasks: ['build-full']
-                    }
-                },
-                deploy: {
-                    options: {
-                        maxSpawn: 1,
-                        vars: {
-                            project: projects,
-                        },
-                        config: {
-                            project: function( vars, rawConfig ){ return grunt.file.readJSON('../config/' + vars.project + '.json'); },
-                            projectname: function( vars, rawConfig ){ return vars.project; },
-                            envt: function( vars, rawConfig ){ return rawConfig.envt; }
-                        },
-                        tasks: ['deploy:dev-full']
+                        tasks: []
                     }
                 }
             }
@@ -179,5 +174,51 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy:copy', ['copy', 'deploy:global']);
     grunt.registerTask('deploy:less', ['newer:less', 'deploy:global']);
     grunt.registerTask('deploy:global', ['shell:local', 'sshexec:prod']);
-    grunt.registerTask('deploy:grunt', ['deploy:global']);
+    grunt.registerTask('run', ['multi:run']);
+
+
+    // Hack for multi-single task
+    grunt.registerTask('multi-single', 'The single task for multi', function(){
+        // Get the raw config and try to update.
+        var rawConfig = grunt.config.getRaw();
+        // Get the special config
+        var singleInfo = JSON.parse(process.env._grunt_multi_info);
+        var singleCfg = singleInfo.config;
+        var singleTasks = singleInfo.tasks;
+        var singleBeginLog = singleInfo.beginLog;
+
+        grunt.log.writeln();
+        if( singleBeginLog ){
+            grunt.log.ok( singleBeginLog );
+        }
+        else {
+            grunt.log.ok( 'A single thread begin:' );
+        }
+
+        // If --debug is provided.
+        if( grunt.util._.indexOf( process.argv, '--debug' ) >= 0 ){
+            console.log( '\033[1;32m--------- Configuration --------\033[0m\n' );
+            grunt.util._.each( singleCfg, function( value, key ){
+                console.log( '\033[1;33m' + key + ':', JSON.stringify(value) + '\033[0m' );
+            });
+            console.log( '\033[1;32m\n--------------------------------\033[0m\n' );
+        }
+
+        // Combine with the raw config.
+        grunt.util._.each(singleCfg, function( value, key ){
+            rawConfig[ key ] = value;
+        });
+
+        // Replace the origin config.
+        grunt.config.init( rawConfig );
+
+        if (typeof(rawConfig.project.tasks) != 'undefined' && rawConfig.project.tasks.length) {
+            // config can have 'tasks' array
+            singleTasks = rawConfig.project.tasks;
+        }
+
+        // Execute tasks
+        grunt.task.run( singleTasks );
+    });
+
 };
