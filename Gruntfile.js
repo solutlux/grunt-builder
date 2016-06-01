@@ -2,7 +2,7 @@ module.exports = function (grunt) {
     // Project configuration.
 
     /**
-     *  For multi-task use multi:deploy or multi:build
+     *  For multi-task use run task
      *  grunt run --project=config1,config3,config2 --envt=config5 --task=less,js
      *  Config can has 'tasks' variable
      *  Option 'task' will rewrite config if exists
