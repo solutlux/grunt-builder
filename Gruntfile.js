@@ -9,12 +9,12 @@ module.exports = function (grunt) {
     function cloneConfig() {
 
         // Init arguments as variables
-        var projectname = grunt.option('project');
-        projectname = typeof(projectname) == 'string' ? projectname.split(',') : projectname;
-        var project = typeof(projectname) == 'Array' && projectname.length && projectname[0] ? grunt.file.readJSON('../config/' + projectname[0] + '.json') : [];
+        var projectname = (new String(grunt.option('project'))).valueOf().split(',');
+        var project = projectname.length == 1 && typeof(projectname[0]) != 'undefined' && projectname[0] != 'undefined' ? grunt.file.readJSON('../config/' + projectname[0] + '.json') : [];
         var envtname = grunt.option('envt');
         var envt = envtname ? grunt.file.readJSON('../config/' + envtname + '-env.json') : [];
-        var projects = typeof(projectname) == 'Array' ? projectname : [];
+        var projects = typeof(projectname) != 'undefined' ? projectname : [];
+        projectname = projects.length ? projectname[0] : '';
 
         var config = {
             pkg: grunt.file.readJSON('package.json'),
@@ -133,7 +133,7 @@ module.exports = function (grunt) {
                         },
                         config: {
                             project: function( vars, rawConfig ){ return grunt.file.readJSON('../config/' + vars.project + '.json'); },
-                            projectname: function( vars, rawConfig ){ projectname = vars.project; return vars.project; },
+                            projectname: function( vars, rawConfig ){ return vars.project; },
                             envt: function( vars, rawConfig ){ return rawConfig.envt; }
                         },
                         tasks: ['build-full']
@@ -147,7 +147,7 @@ module.exports = function (grunt) {
                         },
                         config: {
                             project: function( vars, rawConfig ){ return grunt.file.readJSON('../config/' + vars.project + '.json'); },
-                            projectname: function( vars, rawConfig ){ projectname = vars.project; return vars.project; },
+                            projectname: function( vars, rawConfig ){ return vars.project; },
                             envt: function( vars, rawConfig ){ return rawConfig.envt; }
                         },
                         tasks: ['deploy:dev-full']
