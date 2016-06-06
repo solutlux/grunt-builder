@@ -135,15 +135,19 @@ module.exports = function (grunt) {
                             project: projects,
                         },
                         config: {
-                            project: function( vars, rawConfig ){
+                            project: function (vars, rawConfig) {
                                 project = grunt.file.readJSON('../config/' + vars.project + '.json');
                                 if (optionTasks.length && optionTasks[0]) {
                                     project.tasks = optionTasks;
                                 }
                                 return project;
                             },
-                            projectname: function( vars, rawConfig ){ return vars.project; },
-                            envt: function( vars, rawConfig ){ return rawConfig.envt; }
+                            projectname: function (vars, rawConfig) {
+                                return vars.project;
+                            },
+                            envt: function (vars, rawConfig) {
+                                return rawConfig.envt;
+                            }
                         },
                         tasks: []
                     }
@@ -176,9 +180,8 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy:global', ['shell:local', 'sshexec:prod']);
     grunt.registerTask('run', ['multi:run']);
 
-
     // Hack for multi-single task
-    grunt.registerTask('multi-single', 'The single task for multi', function(){
+    grunt.registerTask('multi-single', 'The single task for multi', function () {
         // Get the raw config and try to update.
         var rawConfig = grunt.config.getRaw();
         // Get the special config
@@ -186,39 +189,22 @@ module.exports = function (grunt) {
         var singleCfg = singleInfo.config;
         var singleTasks = singleInfo.tasks;
         var singleBeginLog = singleInfo.beginLog;
-
         grunt.log.writeln();
-        if( singleBeginLog ){
-            grunt.log.ok( singleBeginLog );
+        if (singleBeginLog) {
+            grunt.log.ok(singleBeginLog);
         }
-        else {
-            grunt.log.ok( 'A single thread begin:' );
-        }
-
-        // If --debug is provided.
-        if( grunt.util._.indexOf( process.argv, '--debug' ) >= 0 ){
-            console.log( '\033[1;32m--------- Configuration --------\033[0m\n' );
-            grunt.util._.each( singleCfg, function( value, key ){
-                console.log( '\033[1;33m' + key + ':', JSON.stringify(value) + '\033[0m' );
-            });
-            console.log( '\033[1;32m\n--------------------------------\033[0m\n' );
-        }
-
         // Combine with the raw config.
-        grunt.util._.each(singleCfg, function( value, key ){
-            rawConfig[ key ] = value;
+        grunt.util._.each(singleCfg, function (value, key) {
+            rawConfig[key] = value;
         });
-
         // Replace the origin config.
-        grunt.config.init( rawConfig );
-
+        grunt.config.init(rawConfig);
         if (typeof(rawConfig.project.tasks) != 'undefined' && rawConfig.project.tasks.length) {
             // config can have 'tasks' array
             singleTasks = rawConfig.project.tasks;
         }
-
         // Execute tasks
-        grunt.task.run( singleTasks );
+        grunt.task.run(singleTasks);
     });
 
 };
