@@ -8,16 +8,59 @@ module.exports = function (grunt) {
      *  Option 'task' will rewrite config if exists
      **/
 
+    /**
+     *
+     * New feature
+     *
+     * grunt -run --envt=config5 --project=config1[task1:task2],config2[task3],config3[task4]
+     *
+     **/
+
     function cloneConfig() {
 
         // Init arguments as variables
-        var projectname = (new String(grunt.option('project'))).valueOf().split(',');
+        var projectTasks = [];
+        projects = [];
+        if (typeof(projectname) == 'undefined') {
+            var projectname = grunt.option('project');
+            projectname = (new String(projectname)).valueOf().split(',');
+        }
+        // Parsing new construction
+        if ((typeof(projectname) == 'object' || typeof(projectname) == 'array') && projectname && projectname.length > 0) {
+            projectArray = projectname;
+            projectname = [];
+            projectArray.forEach(function (projectString, i, arr) {
+                reg = /([a-z-]+)\[([a-z-:]+)\]/i;
+                projectData = projectString.match(reg);
+                if ((typeof(projectData) == 'object' || typeof(projectData) == 'array') && projectData && projectData.length == 3) {
+                    projectname.push(projectData[1]);
+                    projects.push(projectData[1]);
+                    currentTasks = (new String(projectData[2])).valueOf().split(':');
+                    if (typeof(currentTasks[0] != 'undefined') && currentTasks[0] != '') {
+                        projectTasks[projectData[1]] = currentTasks;
+                    }
+                } else {
+                    projectname = projectArray;
+                    projects = projectArray;
+                }
+            });
+        }
+
         var project = projectname.length == 1 && typeof(projectname[0]) != 'undefined' && projectname[0] != 'undefined' ? grunt.file.readJSON('../config/' + projectname[0] + '.json') : [];
         var envtname = grunt.option('envt');
         var envt = envtname ? grunt.file.readJSON('../config/' + envtname + '-env.json') : [];
         var projects = typeof(projectname) != 'undefined' ? projectname : [];
-        projectname = projects.length ? projectname[0] : '';
         var optionTasks = (new String(grunt.option('tasks'))).valueOf().split(',');
+        if (typeof(optionTasks) != 'undefined' && optionTasks.length) {
+            projectname.forEach(function (key, i, arr) {
+                if (typeof(projectTasks[key]) == 'undefined') {
+                    if (typeof(optionTasks[0] != 'undefined') && optionTasks[0] != '') {
+                        projectTasks[key] = optionTasks;
+                    }
+                }
+            });
+        }
+        projectname = projects.length ? projectname[0] : '';
 
         var config = {
             pkg: grunt.file.readJSON('package.json'),
@@ -136,9 +179,10 @@ module.exports = function (grunt) {
                         },
                         config: {
                             project: function (vars, rawConfig) {
-                                project = grunt.file.readJSON('../config/' + vars.project + '.json');
-                                if (optionTasks.length && optionTasks[0]) {
-                                    project.tasks = optionTasks;
+                                projectName = vars.project.replace(/\[([a-z-:]+)\]/, '');
+                                project = grunt.file.readJSON('../config/' + projectName + '.json');
+                                if (typeof(projectTasks[projectName]) != 'undefined' && projectTasks[projectName].length) {
+                                    project.tasks =  projectTasks[projectName];
                                 }
                                 return project;
                             },
