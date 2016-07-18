@@ -100,7 +100,9 @@ module.exports = function (grunt) {
             uglify: {
                 options: {
                     mangle: "<%= project.uglifyMangle %>",
-                    sourceMap: "<%= project.uglifySourceMap %>"
+                    sourceMap: "<%= project.uglifySourceMap %>",
+                    beautify: "<%= project.uglifySourceMap %>",
+                    sourceMapIncludeSources: "<%= project.uglifySourceMap %>"
                 },
                 prod: {
                     files: "<%= project.uglifyFiles %>"
