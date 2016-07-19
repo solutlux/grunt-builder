@@ -228,16 +228,16 @@ module.exports = function (grunt) {
 
     // Task definition
     grunt.registerTask('js', ['concat', 'uglify']);
-    grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'newer:tinyimg', 'newer:imagemin', 'newer:less', 'concat', 'uglify', 'newer:copy', 'clean:after']);
+    grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'build', 'clean:after']);
     grunt.registerTask('build', ['imagemin', 'tinyimg', 'less', 'concat', 'uglify', 'copy']);
 
     grunt.registerTask('deploy:copyless', ['less', 'copy', 'deploy:global']);
 
-    grunt.registerTask('deploy:shell', ['clean:before', 'newer:less', 'concat', 'uglify', 'newer:copy', 'rsync', 'deploy:global']);
+    grunt.registerTask('deploy:shell', ['clean:before', 'less', 'concat', 'uglify', 'copy', 'rsync', 'deploy:global']);
     grunt.registerTask('deploy:js', ['js', 'shell:local', 'sshexec:prod']);
     grunt.registerTask('deploy:dev-full', ['build-full', 'deploy:global']);
     grunt.registerTask('deploy:copy', ['copy', 'deploy:global']);
-    grunt.registerTask('deploy:less', ['newer:less', 'deploy:global']);
+    grunt.registerTask('deploy:less', ['less', 'deploy:global']);
     grunt.registerTask('deploy:php', ['shell:php', 'deploy:global']);
     grunt.registerTask('deploy:php-full', ['build-full', 'shell:php', 'deploy:global']);
     grunt.registerTask('deploy:global', ['shell:local', 'sshexec:prod']);
