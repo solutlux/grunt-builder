@@ -134,6 +134,11 @@ module.exports = function (grunt) {
                     files: "<%= project.tinyimgFiles %>"
                 }
             },
+            tinyimgcust: {
+                dynamic: {
+                    files: "<%= project.tinyimgFiles %>"
+                }
+            },
             rename: {
                 options: {
                     force: true
@@ -229,7 +234,7 @@ module.exports = function (grunt) {
     // Task definition
     grunt.registerTask('js', ['concat', 'uglify']);
     grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'build', 'clean:after']);
-    grunt.registerTask('build', ['imagemin', 'tinyimg', 'less', 'concat', 'uglify', 'copy']);
+    grunt.registerTask('build', ['imagemin', 'tinyimgcust', 'less', 'concat', 'uglify', 'copy']);
 
     grunt.registerTask('deploy:copyless', ['less', 'copy', 'deploy:global']);
 
@@ -269,6 +274,15 @@ module.exports = function (grunt) {
         // Execute tasks
         if (singleTasks.length) {
             grunt.task.run(singleTasks);
+        }
+    });
+
+    // Hack for tiny-img task
+    grunt.registerTask('tinyimgcust', 'The custom task for tinyimg', function () {
+        // Check if files set
+        var rawConfig = grunt.config.getRaw();
+        if (typeof rawConfig.project.tinyimgFiles !== 'undefined') {
+            grunt.task.run('tinyimg');
         }
     });
 
