@@ -139,6 +139,12 @@ module.exports = function (grunt) {
                     files: "<%= project.tinyimgFiles %>"
                 }
             },
+            cwebp: {
+                dynamic: {
+                    options: "<%= project.webpOptions %>",
+                    files: "<%= project.webpFiles %>"
+                }
+            },
             rename: {
                 options: {
                     force: true
@@ -234,7 +240,7 @@ module.exports = function (grunt) {
     // Task definition
     grunt.registerTask('js', ['concat', 'uglify']);
     grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'build', 'clean:after']);
-    grunt.registerTask('build', ['imagemin', 'tinyimgcust', 'less', 'concat', 'uglify', 'copy']);
+    grunt.registerTask('build', ['imagemin', 'tinyimgcust', 'less', 'concat', 'uglify', 'copy', 'cwebp']);
 
     grunt.registerTask('deploy:copyless', ['less', 'copy', 'deploy:global']);
 
