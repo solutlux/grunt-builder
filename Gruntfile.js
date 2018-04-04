@@ -145,6 +145,9 @@ module.exports = function (grunt) {
                     files: "<%= project.webpFiles %>"
                 }
             },
+            modernizr: {
+                dist: "<%= project.modernizrOptions %>"
+            },
             rename: {
                 options: {
                     force: true
