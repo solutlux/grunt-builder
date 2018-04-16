@@ -142,11 +142,33 @@ module.exports = function (grunt) {
             cwebp: {
                 dynamic: {
                     options: "<%= project.webpOptions %>",
-                    files: "<%= project.webpFiles %>"
+                    files: "<%= project.convertingImages %>"
                 }
             },
             modernizr: {
                 dist: "<%= project.modernizrOptions %>"
+            },
+            command_run: {
+                //Requires the imagemagick library. Please install first
+                convert_to_jp2: {
+                    options: {
+                        getCommand: function (filepath, dest) {
+                            return 'mogrify -format jp2 -path ' + dest.slice(0, dest.lastIndexOf('/') - dest.length + 1) + ' ' + filepath;
+                        },
+                        quiet: true
+                    },
+                    files: "<%= project.convertingImages %>"
+                },
+                //Requires the jxrlib library. Please install first
+                convert_to_jxr: {
+                    options: {
+                        getCommand: function (filepath, dest) {
+                            return 'convert '+filepath+' jxr:' + dest.slice(0, dest.lastIndexOf('.') - dest.length + 1) + 'jxr';
+                        },
+                        quiet: false
+                    },
+                    files: "<%= project.convertingImages %>"
+                }
             },
             rename: {
                 options: {
@@ -243,11 +265,19 @@ module.exports = function (grunt) {
     // Task definition
     grunt.registerTask('js', ['concat', 'uglify']);
     grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'build', 'clean:after']);
-    grunt.registerTask('build', ['imagemin', 'tinyimgcust', 'less', 'concat', 'uglify', 'copy', 'cwebp']);
+    grunt.registerTask('build', ['convertimg', 'imagemin', 'tinyimgcust', 'less', 'concat', 'uglify', 'copy', 'modernizrcust']);
 
     grunt.registerTask('deploy:copyless', ['less', 'copy', 'deploy:global']);
 
-    grunt.registerTask('deploy:shell', ['clean:before', 'less', 'concat', 'uglify', 'copy', 'rsync', 'deploy:global']);
+    grunt.registerTask('deploy:shell', [
+        'clean:before',
+        'less',
+        'concat',
+        'uglify',
+        'copy',
+        'rsync',
+        'deploy:global'
+    ]);
     grunt.registerTask('deploy:js', ['js', 'shell:local', 'sshexec:prod']);
     grunt.registerTask('deploy:dev-full', ['build-full', 'deploy:global']);
     grunt.registerTask('deploy:copy', ['copy', 'deploy:global']);
@@ -292,6 +322,26 @@ module.exports = function (grunt) {
         var rawConfig = grunt.config.getRaw();
         if (typeof rawConfig.project.tinyimgFiles !== 'undefined') {
             grunt.task.run('tinyimg');
+        }
+    });
+
+    // register modernizr task
+    grunt.registerTask('modernizrcust', 'The custom task for modernizr', function () {
+        // Check if files set
+        var rawConfig = grunt.config.getRaw();
+        if (typeof rawConfig.project.modernizrOptions !== 'undefined') {
+            grunt.task.run('modernizr');
+        }
+    });
+
+    // register convertimg task
+    grunt.registerTask('convertimg', 'The custom task for convertimg', function () {
+        // Check if files set
+        var rawConfig = grunt.config.getRaw();
+        if (typeof rawConfig.project.convertingImages !== 'undefined') {
+            grunt.task.run('cwebp');
+            grunt.task.run('command_run:convert_to_jp2');
+            grunt.task.run('command_run:convert_to_jxr');
         }
     });
 
