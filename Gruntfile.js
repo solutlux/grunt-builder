@@ -220,6 +220,11 @@ module.exports = function (grunt) {
                 },
                 local: {
                     command: typeof(project.shellLocalCommands) == 'array' || typeof(project.shellLocalCommands) == 'object' ? project.shellLocalCommands.join(' && ') : "<%= project.shellLocalCommand %>",
+                    options: {
+                        execOptions: {
+                            maxBuffer: Infinity
+                        }
+                    }
                 },
                 rsync: {
                     command: typeof(project.shellRsyncCommands) == 'array' || typeof(project.shellRsyncCommands) == 'object' ? project.shellRsyncCommands.join(' && ') : "<%= project.shellRsyncCommand %>",
