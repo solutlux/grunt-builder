@@ -84,6 +84,14 @@ module.exports = function (grunt) {
                     files: "<%= project.lessFiles %>"
                 }
             },
+            sass: {
+                dist: {
+                    options: {
+                        sourceMap: "<%= project.cssSourceMap %>"
+                    },
+                    files: "<%= project.sassFiles %>"
+                }
+            },
             cssmin: {
                 target: {
                     files: "<%= project.cssMinFiles %>"
@@ -261,11 +269,11 @@ module.exports = function (grunt) {
     // grunt.loadNpmTasks('grunt-typescript');
     require('load-grunt-tasks')(grunt);
     grunt.loadNpmTasks('assemble-less');
-
+    grunt.loadNpmTasks('grunt-contrib-sass');
     // Task definition
     grunt.registerTask('js', ['concat', 'uglify']);
     grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'build', 'clean:after']);
-    grunt.registerTask('build', ['convertimg', 'imagemin', 'tinyimgcust', 'less', 'concat', 'uglify', 'copy', 'modernizrcust']);
+    grunt.registerTask('build', ['convertimg', 'imagemin', 'tinyimgcust', 'less', 'sass', 'concat', 'uglify', 'copy', 'modernizrcust']);
 
     grunt.registerTask('deploy:copyless', ['less', 'copy', 'deploy:global']);
 
