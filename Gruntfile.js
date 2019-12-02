@@ -87,7 +87,7 @@ module.exports = function (grunt) {
             sass: {
                 dist: {
                     options: {
-                        sourceMap: "<%= project.cssSourceMap %>"
+                        sourcemap: "<%= project.cssSourceMap %>"
                     },
                     files: "<%= project.sassFiles %>"
                 }

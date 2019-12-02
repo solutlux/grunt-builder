@@ -25,14 +25,17 @@
     "grunt-focus": "^0.1.1",
     "grunt-ftp-deploy": "^0.1.10",
     "grunt-ftp-push": "^0.3.6",
-    "grunt-modernizr": "^1.0.2",
+    "grunt-modernizr": "^1.0.3",
     "grunt-multi": "^0.0.6",
     "grunt-prompt": "^1.3.0",
     "grunt-rename": "^0.1.4",
     "grunt-shell": "^1.1.2",
     "grunt-spritesmith": "^4.5.3",
-    "grunt-ssh": "^0.12.2",
+    "grunt-ssh": "^0.12.9",
     "grunt-tinyimg": "^1.0.0",
     "load-grunt-tasks": "^3.2.0"
+  },
+  "dependencies": {
+    "sass": "^1.23.7"
   }
 }
