@@ -92,6 +92,18 @@ module.exports = function (grunt) {
                     files: "<%= project.sassFiles %>"
                 }
             },
+            autoprefixer: {
+                options: {
+                    browserslist: ["<%= project.autoprefixerBrowserslist %>"],
+                    cascade: "<%= project.autoprefixerCascade %>"
+                },
+                multiple_files: {
+                    expand: "<%= project.autoprefixerExpand %>",
+                    cwd: "<%= project.autoprefixerCwd %>",
+                    src: "<%= project.autoprefixerSrc %>",
+                    dest: "<%= project.autoprefixerDest %>"
+                }
+            },
             cssmin: {
                 target: {
                     files: "<%= project.cssMinFiles %>"
@@ -278,7 +290,7 @@ module.exports = function (grunt) {
     // Task definition
     grunt.registerTask('js', ['concat', 'uglify']);
     grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'build', 'clean:after']);
-    grunt.registerTask('build', ['convertimg', 'imagemin', 'tinyimgcust', 'less', 'sass', 'concat', 'uglify', 'copy', 'modernizrcust']);
+    grunt.registerTask('build', ['convertimg', 'imagemin', 'tinyimgcust', 'less', 'sass', 'concat', 'uglify', 'copy', 'autoprefixer', 'modernizrcust']);
 
     grunt.registerTask('deploy:copyless', ['less', 'copy', 'deploy:global']);
 
