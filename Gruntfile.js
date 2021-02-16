@@ -289,6 +289,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     // Task definition
     grunt.registerTask('js', ['concat', 'uglify']);
+    grunt.registerTask('images', ['imagemin', 'tinyimgcust']);
     grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'build', 'clean:after']);
     grunt.registerTask('build', ['convertimg', 'imagemin', 'tinyimgcust', 'less', 'sass', 'concat', 'uglify', 'copy', 'autoprefixer', 'modernizrcust']);
 
