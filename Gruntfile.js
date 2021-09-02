@@ -203,6 +203,10 @@ module.exports = function (grunt) {
                     files: "<%= project.watchLessFiles %>",
                     tasks: "<%= project.watchLessTasks %>"
                 },
+                sass: {
+                    files: "<%= project.watchSassFiles %>",
+                    tasks: "<%= project.watchSassTasks %>"
+                },
                 scripts: {
                     files: "<%= project.watchScriptsFiles %>",
                     tasks: "<%= project.watchScriptsTasks %>"
