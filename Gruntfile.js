@@ -296,7 +296,18 @@ module.exports = function (grunt) {
     grunt.registerTask('js', ['concat', 'uglify']);
     grunt.registerTask('images', ['imagemin', 'tinyimgcust']);
     grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'build', 'clean:after']);
-    grunt.registerTask('build', ['convertimg', 'imagemin', 'tinyimgcust', 'less', 'sass', 'concat', 'uglify', 'copy', 'autoprefixer', 'modernizrcust']);
+    grunt.registerTask('build', [
+        'convertimg',
+        'imagemin',
+        'tinyimgcust',
+        'less',
+        'sass',
+        'concat',
+        'uglify',
+        'copy',
+        'autoprefixercust',
+        'modernizrcust'
+    ]);
 
     grunt.registerTask('deploy:copyless', ['less', 'copy', 'deploy:global']);
 
@@ -375,5 +386,15 @@ module.exports = function (grunt) {
             grunt.task.run('command_run:convert_to_jxr');
         }
     });
+
+    // register autoprefixer task
+    grunt.registerTask('autoprefixercust', 'The custom task for convertimg', function () {
+        // Check if files set
+        var rawConfig = grunt.config.getRaw();
+        if (typeof rawConfig.project.autoprefixerCascade !== 'undefined') {
+            grunt.task.run('autoprefixer');
+        }
+    });
+
 
 };
