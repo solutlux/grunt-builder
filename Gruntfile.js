@@ -294,7 +294,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     // Task definition
     grunt.registerTask('js', ['concat', 'uglify']);
-    grunt.registerTask('images', ['imagemin', 'tinyimgcust']);
+    grunt.registerTask('images', ['convertimg', 'imagemin', 'tinyimgcust']);
     grunt.registerTask('build-full', ['clean:before', 'autospritesmith', 'build', 'clean:after']);
     grunt.registerTask('build', [
         'convertimg',
@@ -382,13 +382,13 @@ module.exports = function (grunt) {
         var rawConfig = grunt.config.getRaw();
         if (typeof rawConfig.project.convertingImages !== 'undefined') {
             grunt.task.run('cwebp');
-            grunt.task.run('command_run:convert_to_jp2');
-            grunt.task.run('command_run:convert_to_jxr');
+            //grunt.task.run('command_run:convert_to_jp2');
+            //grunt.task.run('command_run:convert_to_jxr');
         }
     });
 
     // register autoprefixer task
-    grunt.registerTask('autoprefixercust', 'The custom task for convertimg', function () {
+    grunt.registerTask('autoprefixercust', 'The custom task for autoprefixing', function () {
         // Check if files set
         var rawConfig = grunt.config.getRaw();
         if (typeof rawConfig.project.autoprefixerCascade !== 'undefined') {
