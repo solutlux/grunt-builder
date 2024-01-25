@@ -16,7 +16,8 @@ module.exports = function (grunt) {
      *
      **/
 
-    function cloneConfig() {
+    function cloneConfig()
+    {
 
         // Init arguments as variables
         var projectTasks = [];
@@ -36,7 +37,7 @@ module.exports = function (grunt) {
                             if ((typeof(projectData) == 'object' || typeof(projectData) == 'array') && projectData && projectData.length == 3) {
                                 projectname.push(projectData[1]);
                                 projects.push(projectData[1]);
-                                currentTasks = (new String(projectData[2])).valueOf().split(',');
+                                currentTasks = (String(projectData[2])).valueOf().split(',');
                                 if (typeof(currentTasks[0] != 'undefined') && currentTasks[0] != '') {
                                     projectTasks[projectData[1]] = currentTasks;
                                 }
@@ -44,7 +45,7 @@ module.exports = function (grunt) {
                         }
                     });
                 } else {
-                    projectname = (new String(projectname)).valueOf().split(',');
+                    projectname = (String(projectname)).valueOf().split(',');
                 }
             }
         }
@@ -54,7 +55,7 @@ module.exports = function (grunt) {
         var envtname = grunt.option('envt');
         var envt = envtname ? grunt.file.readJSON('../config/' + envtname + '-env.json') : [];
 
-        var optionTasks = (new String(grunt.option('tasks'))).valueOf().split(',');
+        var optionTasks = (String(grunt.option('tasks'))).valueOf().split(',');
         if (typeof(projectname) == 'array' || typeof(projectname) == 'object') {
             if (typeof(optionTasks) != 'undefined' && optionTasks.length) {
                 projectname.forEach(function (key, i, arr) {
@@ -166,9 +167,6 @@ module.exports = function (grunt) {
                     files: "<%= project.convertingImages %>"
                 }
             },
-            modernizr: {
-                dist: "<%= project.modernizrOptions %>"
-            },
             command_run: {
                 //Requires the imagemagick library. Please install first
                 convert_to_jp2: {
@@ -184,7 +182,7 @@ module.exports = function (grunt) {
                 convert_to_jxr: {
                     options: {
                         getCommand: function (filepath, dest) {
-                            return 'convert '+filepath+' jxr:' + dest.slice(0, dest.lastIndexOf('.') - dest.length + 1) + 'jxr';
+                            return 'convert ' + filepath + ' jxr:' + dest.slice(0, dest.lastIndexOf('.') - dest.length + 1) + 'jxr';
                         },
                         quiet: false
                     },
@@ -305,8 +303,7 @@ module.exports = function (grunt) {
         'concat',
         'uglify',
         'copy',
-        'autoprefixercust',
-        'modernizrcust'
+        'autoprefixercust'
     ]);
 
     grunt.registerTask('deploy:copyless', ['less', 'copy', 'deploy:global']);
@@ -367,14 +364,6 @@ module.exports = function (grunt) {
         }
     });
 
-    // register modernizr task
-    grunt.registerTask('modernizrcust', 'The custom task for modernizr', function () {
-        // Check if files set
-        var rawConfig = grunt.config.getRaw();
-        if (typeof rawConfig.project.modernizrOptions !== 'undefined') {
-            grunt.task.run('modernizr');
-        }
-    });
 
     // register convertimg task
     grunt.registerTask('convertimg', 'The custom task for convertimg', function () {
